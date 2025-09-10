@@ -4,6 +4,7 @@ import com.jmjbrothers.spring.securtiy.authentication.dto.PasswordChangeRequestD
 import com.jmjbrothers.spring.securtiy.authentication.dto.UserEditDto;
 import com.jmjbrothers.spring.securtiy.authentication.dto.UserResponseDto;
 import com.jmjbrothers.spring.securtiy.authentication.model.CreditPackage;
+import com.jmjbrothers.spring.securtiy.authentication.model.User;
 import com.jmjbrothers.spring.securtiy.authentication.service.CreditPackageService;
 import com.jmjbrothers.spring.securtiy.authentication.service.UserInfoDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -61,12 +62,9 @@ public class UserController {
 
     @PutMapping("/edit")
     public ResponseEntity<?> editUserById(@RequestBody UserEditDto userEditDto){
-        userInfoDetailsService.editUserInfoById(userEditDto);
+        User user = userInfoDetailsService.editUserInfoById(userEditDto);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
-
-
-
 
 }

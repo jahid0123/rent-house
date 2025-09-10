@@ -156,14 +156,7 @@ public class PropertyPostService {
     public List<GetPostedProperty> getAllPostedProperty() {
 
         List<PropertyPost> allPostedProperty = propertyPostRepository.findAll();
-
-        //this is the simple way but Difficult to understand
-        List<GetPostedProperty> getPostedPropertyList
-                = allPostedProperty.stream().map(this::getPostedPropertyMapped).collect(Collectors.toList());
-
-        return getPostedPropertyList;
-
-
+        return allPostedProperty.stream().map(this::getPostedPropertyMapped).collect(Collectors.toList());
     }
 
 
@@ -193,13 +186,8 @@ public class PropertyPostService {
     @Transactional
     public List<MyPostPropertyResponseDto> allPropertyPostedByMe(Long id) {
         List<PropertyPost> allPropertyUnlock = propertyPostRepository.findAllByUserId(id);
-
-        List<MyPostPropertyResponseDto> myAllProperty = allPropertyUnlock.stream().map(this::myPostPropertyResponseDto).collect(Collectors.toList());
-        return myAllProperty;
+        return allPropertyUnlock.stream().map(this::myPostPropertyResponseDto).collect(Collectors.toList());
     }
-
-
-
 
     private MyPostPropertyResponseDto myPostPropertyResponseDto (PropertyPost propertyPost){
         MyPostPropertyResponseDto myPost = new MyPostPropertyResponseDto();
@@ -239,19 +227,28 @@ public class PropertyPostService {
 
         return "Post deleted successfully!";
     }
-    /*@Transactional
-    public String deleteMyPostedProperties(Long id) {
-        PropertyPost post= propertyPostRepository.findById(id).orElse(null);
-        propertyRepository.deleteById(post.getProperty().getId());
-        propertyPostRepository.deleteById(id);
-        return "Post deleted successfully!";
-    }*/
 
     public MyPostPropertyResponseDto updateMyPostedProperties(UpdateMyPostedPropertyDto propertyDto) {
         PropertyPost propertyPost = propertyPostRepository.findById(propertyDto.getPostId()).orElseThrow(
                 ()->new RuntimeException("Property not found with id "+propertyDto.getPostId()));
 
-        Property findProperty = propertyRepository.findById(propertyPost.getProperty().getId()).orElse(null);
+        Property findProperty = propertyRepository.findById(propertyPost.getProperty().getId()).orElseThrow(
+                () -> new NullPointerException("Property not found by Id: " + propertyPost.getProperty().getId())
+        );
+
+        Property saved = saveProperty(findProperty, propertyDto);
+
+
+        propertyPost.setContactNumber(propertyDto.getContactNumber());
+        propertyPost.setContactPerson(propertyDto.getContactPerson());
+        propertyPost.setAvailableFrom(propertyDto.getAvailableFrom());
+
+
+        return myPostPropertyResponseDto(propertyPostRepository.save(propertyPost));
+    }
+
+    private Property saveProperty(Property findProperty, UpdateMyPostedPropertyDto propertyDto) {
+
         findProperty.setCategory(propertyDto.getCategory());
         findProperty.setTitle(propertyDto.getTitle());
         findProperty.setDescription(propertyDto.getDescription());
@@ -264,23 +261,15 @@ public class PropertyPostService {
         findProperty.setHouseNumber(propertyDto.getHouseNumber());
         findProperty.setAddress(propertyDto.getAddress());
 
-        propertyRepository.save(findProperty);
+        return  propertyRepository.save(findProperty);
 
-        propertyPost.setContactNumber(propertyDto.getContactNumber());
-        propertyPost.setContactPerson(propertyDto.getContactPerson());
-//        propertyPost.setArea(propertyDto.getArea());
-        propertyPost.setAvailableFrom(propertyDto.getAvailableFrom());
-
-
-        return myPostPropertyResponseDto(propertyPostRepository.save(propertyPost));
     }
 
 
     @Transactional
     public List<PostedPropertyResponseDto> allPostedProperty() {
         List<PropertyPost> propertyPosts = propertyPostRepository.findAll();
-        List<PostedPropertyResponseDto> myAllProperty = propertyPosts.stream().map(this::postedPropertyResponseDto).collect(Collectors.toList());
-        return myAllProperty;
+        return propertyPosts.stream().map(this::postedPropertyResponseDto).collect(Collectors.toList());
     }
 
     private PostedPropertyResponseDto  postedPropertyResponseDto (PropertyPost propertyPost){
@@ -289,7 +278,6 @@ public class PropertyPostService {
         myPost.setUserId(propertyPost.getUser().getId());
         myPost.setContactNumber(propertyPost.getContactNumber());
         myPost.setContactPerson(propertyPost.getContactPerson());
-//        myPost.setArea(propertyPost.getArea());
         myPost.setAvailableFrom(propertyPost.getAvailableFrom());
         myPost.setCategory(propertyPost.getProperty().getCategory());
         myPost.setTitle(propertyPost.getProperty().getTitle());
@@ -311,7 +299,10 @@ public class PropertyPostService {
     @Transactional
     public PropertyPost updatePostedProperty(PropertyPostUpdateDto post) {
 
-        PropertyPost propertyPost = propertyPostRepository.findById(post.getPostId()).orElse(null);
+        PropertyPost propertyPost = propertyPostRepository.findById(post.getPostId()).orElseThrow(
+                ()-> new NullPointerException("PropertyPost not found by Id: " + post.getPostId())
+        );
+
         Property property = propertyPost.getProperty();
         property.setIsAvailable(post.getIsAvailable());
         propertyPost.setProperty(property);

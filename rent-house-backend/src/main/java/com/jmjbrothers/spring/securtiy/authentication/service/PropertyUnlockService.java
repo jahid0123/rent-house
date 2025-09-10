@@ -56,9 +56,7 @@ public class PropertyUnlockService {
     @Transactional
     public List<MyUnlockPropertyDto> allPropertyUnlockById(Long id) {
         List<PropertyUnlock> allPropertyUnlock = propertyUnlockRepository.findAllByUserId(id);
-
-        List<MyUnlockPropertyDto> getAllUnlockPropertyByMe = allPropertyUnlock.stream().map(this::unlockPropertyDto).collect(Collectors.toList());
-        return getAllUnlockPropertyByMe;
+        return allPropertyUnlock.stream().map(this::unlockPropertyDto).collect(Collectors.toList());
     }
 
     private MyUnlockPropertyDto unlockPropertyDto(PropertyUnlock propertyUnlock) {
@@ -70,7 +68,6 @@ public class PropertyUnlockService {
         propertyUnlockDto.setDateUnlocked(propertyUnlock.getDateUnlocked());
         propertyUnlockDto.setContactPerson(propertyUnlock.getPropertyPost().getContactPerson());
         propertyUnlockDto.setContactNumber(propertyUnlock.getPropertyPost().getContactNumber());
-//        propertyUnlockDto.setArea(propertyUnlock.getPropertyPost().getArea());
         propertyUnlockDto.setAvailableFrom(propertyUnlock.getPropertyPost().getAvailableFrom());
         propertyUnlockDto.setCategory(propertyUnlock.getPropertyPost().getProperty().getCategory());
         propertyUnlockDto.setTitle(propertyUnlock.getPropertyPost().getProperty().getTitle());

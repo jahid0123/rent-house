@@ -17,17 +17,13 @@ public class CreditPackageService {
     private CreditPackageRepository packageRepository;
 
 
+    @Transactional
     public CreditPackage addCreditPackage(CreditPackage cPackage) {
-        CreditPackage addPackage = packageRepository.save(cPackage);
-        if (addPackage == null){
-            throw new RuntimeException("Credit package not added!");
-        }
-        return addPackage;
-
+        return packageRepository.save(cPackage);
     }
 
+    @Transactional
     public List<CreditPackage> allCreditPackage() {
-
         return packageRepository.findAll();
     }
 
@@ -36,6 +32,7 @@ public class CreditPackageService {
 
         CreditPackage creditPackage = packageRepository.findById(editBody.getId()).orElse(null);
 
+        assert creditPackage != null;
         creditPackage.setName(editBody.getName());
         creditPackage.setCreditAmount(editBody.getCreditAmount());
         creditPackage.setPrice(editBody.getPrice());
@@ -47,7 +44,6 @@ public class CreditPackageService {
     @Transactional
     public String deletePackageById(Long id) {
         packageRepository.deleteById(id);
-
         return "Delete package successfully.";
     }
 }

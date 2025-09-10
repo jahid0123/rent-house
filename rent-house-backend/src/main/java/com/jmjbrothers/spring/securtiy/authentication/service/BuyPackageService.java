@@ -65,8 +65,7 @@ public class BuyPackageService {
     public List<PurchaseHistoryDto> allPropertyUnlockById(Long id) {
         List<BuyPackage> myPurchaseHistory = creditTransactionRepository.findAllByUserId(id);
 
-        List<PurchaseHistoryDto> historyDtos = myPurchaseHistory.stream().map(this::responseHistoryDto).collect(Collectors.toList());
-        return historyDtos;
+        return myPurchaseHistory.stream().map(this::responseHistoryDto).collect(Collectors.toList());
     }
 
     private PurchaseHistoryDto responseHistoryDto(BuyPackage buyPackage) {
@@ -84,9 +83,8 @@ public class BuyPackageService {
     @Transactional
     public List<PurchaseHistoryDto> allPropertyUnlock() {
         List<BuyPackage> myPurchaseHistory = creditTransactionRepository.findAll();
+        return myPurchaseHistory.stream().map(this::responseHistoryDto).collect(Collectors.toList());
 
-        List<PurchaseHistoryDto> historyDtos = myPurchaseHistory.stream().map(this::responseHistoryDto).collect(Collectors.toList());
-        return historyDtos;
 
     }
 }

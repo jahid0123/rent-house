@@ -6,6 +6,7 @@ import com.jmjbrothers.spring.securtiy.authentication.model.User;
 import com.jmjbrothers.spring.securtiy.authentication.model.UserInfoDetails;
 import com.jmjbrothers.spring.securtiy.authentication.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -93,19 +94,15 @@ public class UserInfoDetailsService implements UserDetailsService {
     }
 
     @Transactional
-    public ResponseEntity<?> editUserInfoById(UserEditDto userEditDto) {
+    public User editUserInfoById(UserEditDto userEditDto) {
         User user = userRepository.findById(userEditDto.getUserId()).orElseThrow(
-                ()-> new UsernameNotFoundException("user not found with the id "+userEditDto.getUserId()));
-        if (user != null){
+                ()-> new UsernameNotFoundException("user not found with the id "+ userEditDto.getUserId()));
+
             user.setName(userEditDto.getName());
             user.setPhone(userEditDto.getPhone());
+        return userRepository.save(user);
 
-            userRepository.save(user);
 
-            return ResponseEntity.ok("User updated successfully");
-        }else {
-            return ResponseEntity.ok("User not updated!!!");
-        }
     }
 
     @Transactional
