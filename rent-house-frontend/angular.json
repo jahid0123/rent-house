@@ -26,13 +26,19 @@
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/slickgrid/slick.grid.css",
+              "node_modules/slickgrid/slick-default-theme.css",
+              "node_modules/angular-slickgrid/styles/css/slickgrid-theme-bootstrap.css",
               "node_modules/bootstrap-icons/font/bootstrap-icons.css",
               "src/styles.css"
-              
             ],
             "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/slickgrid/lib/jquery.event.drag-2.3.0.js",
+              "node_modules/slickgrid/slick.core.js",
+              "node_modules/slickgrid/slick.grid.js",
+              "node_modules/slickgrid/slick.dataview.js",
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
-              
             ]
           },
           "configurations": {

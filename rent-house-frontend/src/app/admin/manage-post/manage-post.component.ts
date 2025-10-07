@@ -1,9 +1,11 @@
 import { CommonModule, NgFor, NgIf } from '@angular/common';
-import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { RentPost } from '../../model/class';
 import { ManagePostService } from './service/manage-post.service';
 import { FormsModule } from '@angular/forms';
 import { Modal } from 'bootstrap';
+
+
 
 @Component({
   selector: 'app-manage-post',
@@ -12,13 +14,12 @@ import { Modal } from 'bootstrap';
   styleUrl: './manage-post.component.css',
 })
 export class ManagePostComponent implements OnInit {
-  rentPosts: RentPost[] = [];
+  rentPosts = signal<any[]>([]);
   selectedPost!: RentPost;
 
   constructor(
     private postService: ManagePostService,
-    private ngZone: NgZone,
-    private cd: ChangeDetectorRef
+
   ) {}
 
   ngOnInit(): void {
@@ -32,10 +33,7 @@ export class ManagePostComponent implements OnInit {
 
     this.postService.getAllPost().subscribe({
       next: (res: RentPost[]) => {
-        this.ngZone.run(() => {
-          this.rentPosts = res;
-          this.cd.detectChanges(); // ✅ force Angular to refresh view
-        });
+          this.rentPosts.update(()=> res);
       },
       error: (err) => {
         console.error('Failed to load post info:', err);
@@ -52,40 +50,47 @@ export class ManagePostComponent implements OnInit {
     }
   }
 
-  updateStatus(): void {
-    const index = this.rentPosts.findIndex(
-      (p) => p.postId === this.selectedPost.postId
-    );
-    if (index !== -1) {
-      this.rentPosts[index].isAvailable = this.selectedPost.isAvailable;
+updateStatus(): void {
+  const index = this.rentPosts().findIndex(
+    (p) => p.postId === this.selectedPost.postId
+  );
 
-      const data = {
-        postId: this.selectedPost.postId,
-        isAvailable: this.selectedPost.isAvailable,
+  if (index !== -1) {
+    // Update signal properly
+    this.rentPosts.update(posts => {
+      posts[index] = {
+        ...posts[index],
+        isAvailable: this.selectedPost.isAvailable
       };
+      return [...posts]; // must return a new array to trigger reactivity
+    });
 
-      this.postService.editPost(data).subscribe({
-        next: () => {
-          alert('Successfully updated.');
-          this.closeModal('statusModal');
-          this.cd.detectChanges();
-        },
-        error: () => {
-          alert('Update process failed!');
-        },
-      });
-    }
+    const data = {
+      postId: this.selectedPost.postId,
+      isAvailable: this.selectedPost.isAvailable,
+    };
+
+    this.postService.editPost(data).subscribe({
+      next: () => {
+        alert('Successfully updated.');
+        this.closeModal('statusModal');
+      },
+      error: () => {
+        alert('Update process failed!');
+      },
+    });
   }
+}
+
 
   deletePost(postId: number): void {
     const confirmed = confirm('Are you sure you want to delete this post?');
     if (confirmed) {
       this.postService.deletePost(postId).subscribe({
         next: () => {
-          this.rentPosts = this.rentPosts.filter(
+          this.rentPosts.update(()=> this.rentPosts().filter(
             (post) => post.postId !== postId
-          );
-          this.cd.detectChanges();
+          ));
           alert('Deleted successfully.');
         },
         error: () => {
