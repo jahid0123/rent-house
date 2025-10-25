@@ -8,7 +8,6 @@ import { UnlockPropertyService } from './service/unlock-property.service';
   selector: 'app-unlock-property',
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './unlock-property.component.html',
-  styleUrl: './unlock-property.component.css',
 })
 export class UnlockPropertyComponent implements OnInit {
 

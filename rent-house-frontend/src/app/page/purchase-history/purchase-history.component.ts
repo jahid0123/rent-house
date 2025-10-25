@@ -6,8 +6,7 @@ import { NgFor, NgIf } from '@angular/common';
 @Component({
   selector: 'app-purchase-history',
   imports: [NgFor, NgIf],
-  templateUrl: './purchase-history.component.html',
-  styleUrl: './purchase-history.component.css'
+  templateUrl: './purchase-history.component.html'
 })
 export class PurchaseHistoryComponent implements OnInit {
   creditPackages: MyPurchasePackageHistory[] = [];

@@ -1,8 +1,1 @@
-.navbar-brand:hover {
-  color: #ffc107 !important;
-}
-
-.btn-warning:hover {
-  background-color: #e0a800;
-  color: #fff;
-}
+/* removed: using Bootstrap only. See backup-css/all-css-backup.txt */

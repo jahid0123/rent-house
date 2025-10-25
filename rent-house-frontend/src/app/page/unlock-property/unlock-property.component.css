@@ -1,16 +1,1 @@
-.table th,
-.table td {
-  vertical-align: middle;
-}
-
-.badge {
-  font-size: 0.9rem;
-}
-
-.btn {
-  font-size: 0.85rem;
-}
-
-.modal {
-  overflow-y: auto;
-}
+/* removed: using Bootstrap only. See backup-css/all-css-backup.txt */

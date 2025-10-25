@@ -9,7 +9,6 @@ import { Router } from '@angular/router';
   selector: 'app-my-property',
   imports: [NgFor, NgClass, ReactiveFormsModule, CommonModule],
   templateUrl: './my-property.component.html',
-  styleUrl: './my-property.component.css',
 })
 export class MyPropertyComponent implements OnInit {
   flatList: MyPostedProperty[] = [];

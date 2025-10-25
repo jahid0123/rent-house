@@ -9,7 +9,6 @@ import { Router } from '@angular/router';
   selector: 'app-post-property',
   imports: [ReactiveFormsModule, NgFor, CommonModule],
   templateUrl: './post-property.component.html',
-  styleUrl: './post-property.component.css',
 })
 export class PostPropertyComponent implements OnInit {
   propertyForm!: FormGroup;

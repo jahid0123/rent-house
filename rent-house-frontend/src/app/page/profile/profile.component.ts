@@ -14,7 +14,6 @@ import {
   selector: 'app-profile',
   imports: [ReactiveFormsModule],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css',
 })
 export class ProfileComponent implements OnInit {
   getUserInfo: GetUserInfo | undefined;

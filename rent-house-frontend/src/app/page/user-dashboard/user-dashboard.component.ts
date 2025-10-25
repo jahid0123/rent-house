@@ -5,8 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-user-dashboard',
   imports: [RouterModule, NgFor],
-  templateUrl: './user-dashboard.component.html',
-  styleUrl: './user-dashboard.component.css'
+  templateUrl: './user-dashboard.component.html'
 })
 export class UserDashboardComponent {
 

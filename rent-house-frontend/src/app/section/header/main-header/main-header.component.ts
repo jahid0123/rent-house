@@ -7,8 +7,7 @@ import { Router, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-main-header',
   imports: [RouterModule],
-  templateUrl: './main-header.component.html',
-  styleUrl: './main-header.component.css'
+  templateUrl: './main-header.component.html'
 })
 export class MainHeaderComponent implements OnInit {
 
